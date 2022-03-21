@@ -50,8 +50,18 @@
         >
           <v-card class="mx-auto" max-width="336">
             <v-card-title>{{ loadingCardText[0] }}</v-card-title>
-
             <v-card-text> {{ loadingCardText[1] }} </v-card-text>
+            <v-card-actions>
+              <v-spacer />
+              <v-btn
+                color="primary"
+                dark
+                :disabled="loadingCardText[0] != '加载失败'"
+                @click="getThisPage"
+              >
+                <v-icon left>mdi-refresh</v-icon>
+              </v-btn>
+            </v-card-actions>
           </v-card>
         </v-lazy>
       </v-col>
@@ -93,9 +103,14 @@ export default {
       }
     },
     async getThisPage() {
+      this.loadingCardText = ['加载中...', '加载中...']
       const data = await this.fetchData(this.page)
       if (data.message) {
         this.loadingCardText = ['加载失败', data.message]
+        return
+      }
+      if (data === []) {
+        this.loadingCardText = ['加载完毕', '没有更多了']
         return
       }
       this.cardlist = this.cardlist.concat(data)
