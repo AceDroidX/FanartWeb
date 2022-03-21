@@ -1,19 +1,23 @@
+process.env.NODE_ENV = 'development'
+process.env.BILI_COOKIE = ""
+
 import { checkCookie, getAllTag, getNewTag } from "./bili"
 import { MongoController } from "./MongoController"
 import fs from 'fs';
 import path from 'path';
 import { Card, IDBAppContext, IDBAppState } from "./model";
+import { main } from './index'
 
-process.env.NODE_ENV = 'development'
-main()
+test()
 
-async function main() {
+async function test() {
     // console.log(await getOldPics())
     // await saveCardsToMongo(await saveCardsToFile())
     // await saveCardsToMongo(readCardsFromFile())
     // await initApi()
     // const cards = readCardsFromFile()
     // await saveCardsToMongo(cards)
+    await main()
 }
 
 async function saveCardsToFile() {

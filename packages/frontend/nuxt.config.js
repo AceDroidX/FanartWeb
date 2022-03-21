@@ -83,7 +83,7 @@ export default {
 
   env: {
     BASE_API_URL:
-      process.env.BASE_API_URL || 'https://fanart.api.acedroidx.top:4430',
+      process.env.NODE_ENV === 'development' ? 'http://localhost:2162' : process.env.BASE_API_URL || 'https://fanart.api.acedroidx.top:4430',
     VERSION: process.env.npm_package_version,
     GIT_HASH: process.env.GITHUB_SHA,
   },

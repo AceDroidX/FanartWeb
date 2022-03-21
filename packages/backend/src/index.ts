@@ -26,7 +26,7 @@ process.on('uncaughtException', function (err) {
 if (require.main === module) {
     main()
 }
-async function main() {
+export async function main() {
     logger.info('连接数据库')
     logger.add(new winston.transports.MongoDB({
         level: 'debug', db: new MongoClient(
