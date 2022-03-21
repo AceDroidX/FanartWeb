@@ -1,0 +1,21 @@
+{
+  "name": "fanartweb-shared",
+  "version": "1.0.0",
+  "description": "",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "scripts": {
+    "start": "node build/index.js",
+    "test": "node build/test.js",
+    "clean": "tsc --build --clean",
+    "dev": "tsc -w",
+    "build": "tsc",
+    "serve": "tsc&&node build/index.js"
+  },
+  "author": "AceDroidX",
+  "license": "ISC",
+  "dependencies": {
+    "typescript": "^4.6.2"
+  },
+  "devDependencies": {}
+}

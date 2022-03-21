@@ -1,0 +1,35 @@
+{
+  "name": "fanartweb",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node build/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "clean": "npm run clean --workspace=fanartweb-shared --workspace=fanartweb-backend",
+    "dev": "concurrently -k \"npm:dev:*\"",
+    "dev:backend": "npm run dev --workspace=fanartweb-backend",
+    "dev:frontend": "npm run dev --workspace=fanartweb-frontend",
+    "dev:shared": "npm run dev --workspace=fanartweb-shared",
+    "build": "tsc",
+    "build:backend": "npm run build:shared && npm run build --workspace=fanartweb-backend",
+    "build:frontend": "npm run build --workspace=fanartweb-frontend",
+    "build:shared": "npm run build --workspace=fanartweb-shared",
+    "start:backend": "npm run start --workspace=fanartweb-backend",
+    "serve": "tsc&&node build/index.js"
+  },
+  "author": "AceDroidX",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^7.0.0",
+    "cz-conventional-changelog": "^3.3.0"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
+}
