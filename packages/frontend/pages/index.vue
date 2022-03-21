@@ -11,15 +11,34 @@
           <v-container>
             <v-row align="center" class="spacer" no-gutters>
               <v-col cols="1">
-                <v-avatar size="42px">
-                  <v-img alt="Avatar" :src="card.user.avatar" />
-                </v-avatar>
+                <a
+                  target="_blank"
+                  :href="'https://space.bilibili.com/' + card.user.id"
+                >
+                  <v-avatar size="42px">
+                    <v-img alt="Avatar" :src="card.user.avatar" />
+                  </v-avatar>
+                </a>
               </v-col>
               <v-col class="pa-2">
-                <strong>{{ card.user.name }}</strong>
+                <a
+                  target="_blank"
+                  :href="'https://space.bilibili.com/' + card.user.id"
+                  class="text-decoration-none white--text"
+                >
+                  <strong>{{ card.user.name }}</strong>
+                </a>
                 <br />
                 <span class="grey--text">{{ $getTime(card.timestamp) }}</span>
               </v-col>
+              <v-spacer />
+              <v-btn
+                text
+                target="_blank"
+                :href="'https://t.bilibili.com/' + card.id"
+                class="grey--text"
+                >原动态></v-btn
+              >
             </v-row>
             <v-row align="center" class="spacer" no-gutters>
               <v-col class="pa-2 text-pre-wrap">{{ card.text }} </v-col>
@@ -33,6 +52,19 @@
               >
                 <v-img :src="pic.img_src" aspect-ratio="1" />
               </v-col>
+            </v-row>
+            <v-row
+              v-if="card.isliked"
+              align="center"
+              class="mt-1 ml-2"
+              no-gutters
+            >
+              <v-col>
+                <v-icon color="grey darken-1" small>mdi-thumb-up</v-icon>
+                <span class="text-caption grey--text"
+                  >七海Nana7mi赞了
+                </span></v-col
+              >
             </v-row>
           </v-container>
         </v-card>
