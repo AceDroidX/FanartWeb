@@ -84,7 +84,7 @@ export default {
     async fetchData(page) {
       try {
         const data = await this.$axios.get(
-          `http://127.0.0.1:2162/fanartList?page=${page}`
+          process.env.BASE_API_URL + `/fanartList?page=${page}`
         )
         return data.data
       } catch (error) {
