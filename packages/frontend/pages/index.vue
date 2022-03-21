@@ -10,7 +10,7 @@
         <v-card>
           <v-container>
             <v-row align="center" class="spacer" no-gutters>
-              <v-col cols="1">
+              <v-col cols="auto">
                 <a
                   target="_blank"
                   :href="'https://space.bilibili.com/' + card.user.id"
@@ -29,7 +29,7 @@
                   <strong>{{ card.user.name }}</strong>
                 </a>
                 <br />
-                <span class="grey--text">{{ $getTime(card.timestamp) }}</span>
+                <span class="grey--text text-no-wrap">{{ $getTime(card.timestamp) }}</span>
               </v-col>
               <v-spacer />
               <v-btn
