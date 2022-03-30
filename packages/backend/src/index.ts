@@ -12,7 +12,7 @@ process.on('uncaughtException', function (err) {
         logger.error(`Weibo模块出现致命错误:\nname:${err.name}\nmessage:${err.message}\nstack:${err.stack}`)
     } else {
         logErrorDetail('未捕获的错误', err)
-        process.exit(2);
+        process.exit(1);
     }
     //打印出错误的调用栈方便调试 
     // console.log(err.stack);
@@ -30,13 +30,9 @@ export async function main() {
     logger.info('连接数据库')
     logger.add(new winston.transports.MongoDB({
         level: 'debug', db: new MongoClient(
-            process.env.NODE_ENV == 'development'
-                ? 'mongodb://admin:admin@localhost:27017/'
-                : 'mongodb://admin:' +
-                process.env.MONGODB_PASS +
-                '@' +
-                process.env.MONGODB_IP +
-                ':27017/?authMechanism=DEFAULT'
+            process.env.NODE_ENV == 'production'
+                ? `mongodb://admin:${process.env.MONGODB_PASS}@${process.env.MONGODB_IP}:27017/?authMechanism=DEFAULT`
+                : 'mongodb://admin:admin@localhost:27017/'
         ).connect(), collection: 'log-fanart', tryReconnect: true
     }))
     const mongo = await MongoController.getInstance()

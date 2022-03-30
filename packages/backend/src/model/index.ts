@@ -22,6 +22,8 @@ type MongoDBs = {
     config: Collection
     blacklist: Collection
     whitelist: Collection
+    admin: Collection
+    token: Collection
 }
 
 class Card extends CardBase {

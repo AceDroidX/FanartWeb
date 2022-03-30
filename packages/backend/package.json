@@ -7,7 +7,7 @@
     "start": "node build/index.js",
     "test": "node build/test.js",
     "clean": "tsc --build --clean",
-    "dev": "tsc -w",
+    "dev": "concurrently -k \"tsc -w\" \"nodemon build/test.js\"",
     "build": "tsc",
     "serve": "tsc&&node build/index.js"
   },
@@ -30,6 +30,8 @@
     "@types/koa": "^2.13.4",
     "@types/koa__cors": "^3.1.1",
     "@types/koa-bodyparser": "^4.3.6",
-    "@types/koa-router": "^7.4.4"
+    "@types/koa-router": "^7.4.4",
+    "concurrently": "^7.0.0",
+    "nodemon": "^2.0.15"
   }
 }

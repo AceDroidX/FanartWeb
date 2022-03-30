@@ -27,6 +27,8 @@
     <v-app-bar :clipped-left="true" fixed app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title v-text="title" />
+      <v-spacer />
+      <v-btn v-if="isAdmin" to="/dashboard"> 管理员后台 </v-btn>
     </v-app-bar>
     <v-main>
       <v-container>
@@ -56,6 +58,11 @@ export default {
       ],
       title: '#鲨画',
     }
+  },
+  computed: {
+    isAdmin() {
+      return 'token' in localStorage
+    },
   },
 }
 </script>

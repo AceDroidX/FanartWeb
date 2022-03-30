@@ -6,6 +6,8 @@ export {
     Emoji,
     GlobalConfig,
     UserInList,
+    AdminUser,
+    Token,
 }
 
 // interface Tag {
@@ -71,5 +73,19 @@ type UserInList = User & {
 
 type GlobalConfig = {
     type: "global"
-    newCardTime: number
+    new_card_time: number
+}
+
+type AdminUser = {
+    type: "admin"
+    username: string
+    password: string
+    salt: string
+}
+
+type Token = {
+    ts: number
+    exp: number
+    username: string
+    token: string
 }

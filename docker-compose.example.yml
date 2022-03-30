@@ -12,6 +12,7 @@ services:
         ports:
             - "127.0.0.1:27017:27017"
         environment:
+            - NODE_ENV=production
             - MONGO_INITDB_ROOT_USERNAME=admin
             - MONGO_INITDB_ROOT_PASSWORD=fanartweb
     fanartweb-backend:
@@ -26,6 +27,7 @@ services:
         ports:
             - "127.0.0.1:2162:2162"
         environment:
+            - NODE_ENV=production
             - MONGODB_PASS=fanartweb
             - MONGODB_IP=fanartweb-mongo
             - BILI_COOKIE=
