@@ -9,6 +9,28 @@ export {
     MongoController
 }
 
+const getCardsPipeline = (blacklist: number[], skipNum: number, limitNum: number) => [{
+    $sort: {
+        timestamp: -1
+    }
+}, {
+    $match: {
+        'user.id': {
+            $nin: blacklist
+        }
+    }
+}, {
+    $skip: skipNum
+}, {
+    $limit: limitNum
+}, {
+    $set: {
+        id: {
+            $toString: '$id'
+        }
+    }
+}]
+
 class MongoController {
     client: MongoClient
     dbs: MongoDBs
@@ -56,7 +78,7 @@ class MongoController {
         logger.info('cardlist更新完毕')
     }
     async getCards(pages: number) {
-        return await this.dbs.cardlist.find({ 'user.id': { $nin: await this.getBlackList() } }).sort('timestamp', -1).skip((pages - 1) * 20).limit(20).toArray()
+        return await this.dbs.cardlist.aggregate(getCardsPipeline(await this.getBlackList(), (pages - 1) * 20, 20)).toArray()
     }
     async isCardsExist() {
         return await this.client.db('fanart').listCollections({ name: 'cardlist' }).hasNext() && await this.dbs.cardlist.countDocuments() > 0

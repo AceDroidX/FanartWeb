@@ -1,3 +1,5 @@
+import { Long } from "mongodb";
+
 export {
     Tag,
     Card,
@@ -48,7 +50,7 @@ type Emoji = {
 }
 
 class Card {
-    id: number;
+    id: Long;
     timestamp: number;
     text: string;
     isliked: boolean;
@@ -56,7 +58,7 @@ class Card {
     user: User;
     emoji: Emoji[];
     pictures: Picture[];
-    constructor(id: number, timestamp: number, text: string, isliked: boolean, user: User, emoji: Emoji[], pictures: Picture[]) {
+    constructor(id: Long, timestamp: number, text: string, isliked: boolean, user: User, emoji: Emoji[], pictures: Picture[]) {
         this.id = id;
         this.timestamp = timestamp;
         this.text = text;

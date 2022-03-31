@@ -1,4 +1,4 @@
-import { Collection } from "mongodb";
+import { Collection, Decimal128, Long } from "mongodb";
 import { MongoController } from "../MongoController";
 import { Card as CardBase, Emoji, Picture, User } from 'fanartweb-shared';
 import logger from "../logger";
@@ -51,7 +51,7 @@ class Card extends CardBase {
                 return undefined
             }
             return new Card(
-                Number(raw.desc.dynamic_id_str),
+                new Long(raw.desc.dynamic_id_str),
                 raw.desc.timestamp,
                 JSON.parse(raw.card).item.description,
                 raw.display.like_info !== undefined ?
