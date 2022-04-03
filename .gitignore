@@ -1,4 +1,5 @@
 docker-compose.yml
+docker-compose-hub.yml
 docker-compose-dev.yml
 
 config/config.json

@@ -1,0 +1,45 @@
+version: "3.7"
+services:
+    fanartweb-mongo:
+        image: mongo
+        restart: unless-stopped
+        container_name: fanartweb-mongo
+        volumes:
+            - mongodata:/data/db
+            - ./backup:/backup
+        networks:
+            - default
+        ports:
+            - "127.0.0.1:27017:27017"
+        environment:
+            - NODE_ENV=production
+            - MONGO_INITDB_ROOT_USERNAME=admin
+            - MONGO_INITDB_ROOT_PASSWORD=fanartweb
+    fanartweb-backend:
+        image: acedroidx/fanartweb-backend
+        container_name: fanartweb-backend
+        depends_on:
+            - fanartweb-mongo
+        networks:
+            - default
+        ports:
+            - "127.0.0.1:2162:2162"
+        environment:
+            - NODE_ENV=production
+            - MONGODB_PASS=fanartweb
+            - MONGODB_IP=fanartweb-mongo
+            - BILI_COOKIE=
+    watchtower:
+        image: containrrr/watchtower
+        networks:
+            - default
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+            - /root/.docker/config.json:/config.json
+        command: --interval 30
+volumes:
+    mongodata:
+
+networks:
+    default:
+        driver: bridge
