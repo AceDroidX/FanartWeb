@@ -3,6 +3,11 @@ name: Docker Image CI
 on:
   push:
     branches: [main]
+    paths:
+      - "packages/backend/**"
+      - "packages/shared/**"
+      - "package.json"
+      - "tsconfig.json"
   workflow_dispatch:
 
 jobs:

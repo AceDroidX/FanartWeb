@@ -1,6 +1,7 @@
 docker-compose.yml
 docker-compose-hub.yml
 docker-compose-dev.yml
+Caddyfile
 
 config/config.json
 config/weibo_cookie.json

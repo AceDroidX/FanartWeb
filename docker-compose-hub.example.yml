@@ -17,6 +17,7 @@ services:
             - MONGO_INITDB_ROOT_PASSWORD=fanartweb
     fanartweb-backend:
         image: acedroidx/fanartweb-backend
+        restart: unless-stopped
         container_name: fanartweb-backend
         depends_on:
             - fanartweb-mongo
@@ -29,8 +30,22 @@ services:
             - MONGODB_PASS=fanartweb
             - MONGODB_IP=fanartweb-mongo
             - BILI_COOKIE=
+    caddy:
+        image: caddy
+        restart: unless-stopped
+        container_name: caddy
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - ./data/caddydata:/data
+            - ./data/caddyconfig:/config
+            - ./Caddyfile:/etc/caddy/Caddyfile
+        networks:
+            - default
     watchtower:
         image: containrrr/watchtower
+        restart: unless-stopped
         networks:
             - default
         volumes:
