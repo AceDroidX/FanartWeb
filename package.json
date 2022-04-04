@@ -13,9 +13,10 @@
     "dev:shared": "npm run dev --workspace=fanartweb-shared",
     "build": "tsc",
     "build:backend": "npm run build:shared && npm run build --workspace=fanartweb-backend",
-    "build:frontend": "npm run build --workspace=fanartweb-frontend",
+    "build:frontend": "npm run generate --workspace=fanartweb-frontend",
     "build:shared": "npm run build --workspace=fanartweb-shared",
     "start:backend": "npm run start --workspace=fanartweb-backend",
+    "start:frontend": "npm run start --workspace=fanartweb-frontend",
     "serve": "tsc&&node build/index.js"
   },
   "author": "AceDroidX",

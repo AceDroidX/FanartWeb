@@ -1,4 +1,4 @@
-name: "Fanart Website Build"
+name: Frontend CI
 
 on:
   push:
@@ -10,33 +10,23 @@ on:
       - "tsconfig.json"
   workflow_dispatch:
 
-env:
-  BASE_API_URL: ${{ secrets.BASE_API_URL }}
-
 jobs:
-  build:
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-        node: [16]
-
+  build-gh-pages:
+    runs-on: ubuntu-latest
+    env:
+      BASE_API_URL: ${{ secrets.BASE_API_URL }}
     defaults:
       run:
         shell: bash
         working-directory: ./
-
     steps:
       - name: Checkout 🛎
         uses: actions/checkout@v2
-
       - name: Setup node env 🏗
         uses: actions/setup-node@v2.1.5
         with:
-          node-version: ${{ matrix.node }}
+          node-version: 16
           check-latest: true
-
       # - name: Cache node_modules 📦
       #   uses: actions/cache@v2.1.4
       #   with:
@@ -44,15 +34,23 @@ jobs:
       #     key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
       #     restore-keys: |
       #       ${{ runner.os }}-node-
-
       - name: Install dependencies 👨🏻‍💻
         run: npm ci
-
       - name: Generate
         run: npm run generate --workspace=fanartweb-frontend
-
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.7
         with:
           branch: gh-pages # The branch the action should deploy to.
           folder: packages/frontend/dist
+  build-docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build
+        run: docker build --build-arg NODE_ENV=production -f ./packages/frontend/Dockerfile -t acedroidx/fanartweb-frontend:latest .
+      - name: Log In
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+      - name: Push
+        run: docker push acedroidx/fanartweb-frontend

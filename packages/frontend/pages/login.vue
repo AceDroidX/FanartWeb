@@ -51,7 +51,7 @@ export default {
       try {
         this.loading = true
         const data = await this.$axios.post(
-          process.env.BASE_API_URL + `/user/login`,
+          this.$config.BASE_API_URL + `/user/login`,
           {
             username: this.username,
             password: this.password,

@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Backend CI
 
 on:
   push:
@@ -11,8 +11,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-backend:
-    name: Build Backend Image
+  build-docker:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

@@ -30,6 +30,15 @@ services:
             - MONGODB_PASS=fanartweb
             - MONGODB_IP=fanartweb-mongo
             - BILI_COOKIE=
+    fanartweb-frontend:
+        image: acedroidx/fanartweb-frontend
+        restart: unless-stopped
+        container_name: fanartweb-frontend
+        networks:
+            - default
+        environment:
+            - NODE_ENV=production
+            - BASE_API_URL=
     caddy:
         image: caddy
         restart: unless-stopped

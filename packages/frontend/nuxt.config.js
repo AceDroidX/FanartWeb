@@ -5,7 +5,7 @@ export default {
   ssr: false,
 
   // Target: https://go.nuxtjs.dev/config-target
-  target: 'static',
+  target: 'server',
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -81,10 +81,10 @@ export default {
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
 
-  env: {
+  publicRuntimeConfig: {
     BASE_API_URL:
       process.env.NODE_ENV === 'production' ? process.env.BASE_API_URL : 'http://localhost:2162',
     VERSION: process.env.npm_package_version,
     GIT_HASH: process.env.GITHUB_SHA,
-  },
+  }
 }
