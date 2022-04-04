@@ -22,6 +22,10 @@
             <v-list-item-title v-text="item.title" />
           </v-list-item-content>
         </v-list-item>
+        <v-divider class="py-2" />
+        <v-list-item>
+          <IntroText />
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
     <v-app-bar :clipped-left="true" fixed app>
