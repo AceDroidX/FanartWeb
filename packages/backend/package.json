@@ -16,6 +16,8 @@
   "dependencies": {
     "@koa/cors": "^3.1.0",
     "axios": "^0.26.0",
+    "dotenv": "^16.0.0",
+    "fanartweb-shared": "workspace:",
     "koa": "^2.13.4",
     "koa-bodyparser": "^4.3.0",
     "koa-router": "^10.1.1",

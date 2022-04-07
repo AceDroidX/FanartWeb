@@ -1,11 +1,10 @@
 import winston from 'winston';
 import { format, transports } from 'winston';
-import { TimestampOptions } from 'logform';
 const { combine, timestamp, label, printf } = format;
 import 'winston-mongodb'
 import { getTime } from './utils';
 
-class MyTimestamp implements TimestampOptions {
+class MyTimestamp implements winston.Logform.TimestampOptions {
   format() {
     return getTime();
   }

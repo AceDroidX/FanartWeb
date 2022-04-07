@@ -1,11 +1,22 @@
+FROM node:16-alpine AS build
+WORKDIR /app
+ENV TZ=Asia/Shanghai
+RUN npm install -g pnpm@next-7 && npm cache clean --force
+COPY pnpm-lock.yaml ./
+RUN pnpm fetch
+COPY . ./
+RUN pnpm install --offline ; \
+    pnpm run build:frontend
+
 FROM node:16-alpine
 WORKDIR /app
 ENV TZ=Asia/Shanghai
-COPY package.json tsconfig.json /app/
-COPY ./packages/frontend/package.json /app/packages/frontend/
-RUN npm --registry https://registry.npmmirror.com install \
-  --workspace=fanartweb-frontend
-COPY ./packages/frontend/ /app/packages/frontend/
-RUN npm run build:frontend
+RUN npm install -g pnpm@next-7 && npm cache clean --force
+COPY pnpm-lock.yaml ./
+RUN pnpm fetch --prod
+COPY . ./
+COPY --from=build /app/packages/frontend/dist/ ./packages/frontend/dist/
+COPY --from=build /app/packages/frontend/.nuxt/ ./packages/frontend/.nuxt/
+RUN pnpm install --offline --prod ; exit 0
 EXPOSE 3000
-CMD ["npm","run","start:frontend"]
+CMD ["pnpm","run","start:frontend"]
