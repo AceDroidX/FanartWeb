@@ -34,6 +34,14 @@
         </v-row>
       </v-container>
     </v-card>
+    <v-snackbar v-model="snackbar" :timeout="timeout">
+      {{ snackbarText }}
+      <template v-slot:action="{ attrs }">
+        <v-btn color="blue" text v-bind="attrs" @click="snackbar = false">
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-container>
 </template>
 
@@ -45,6 +53,9 @@ export default {
       blacklist: [],
       uid: undefined,
       username: undefined,
+      snackbar: false,
+      timeout: 5000,
+      snackbarText: '',
     }
   },
   watch: {},
@@ -64,7 +75,17 @@ export default {
         console.log(data.data)
         this.blacklist = data.data.data
       } catch (error) {
-        console.error(error.response?.data?.msg)
+        const errmsg = error.response?.data?.msg
+        if (error.response?.data?.code === 1) {
+          this.$router.push('/login')
+        }
+        if (errmsg) {
+          this.snackbarText = errmsg
+          this.snackbar = true
+        } else {
+          this.snackbarText = error.message
+        }
+        console.error(errmsg)
         console.error(error)
         return error
       }
