@@ -12,6 +12,8 @@ export {
     AdminUser,
     Token,
     CardsViewTypes,
+    CheckedTypes,
+    UserTypes,
 }
 
 // interface Tag {
@@ -100,4 +102,16 @@ class CardsViewTypes {
     static readonly NORMAL = { name: '原始视图', value: 'normal' }
     static readonly DETAIL = { name: '详细数据', value: 'detail' }
     static readonly ALL = { name: '全部数据', value: 'all' }
+}
+
+class CheckedTypes {
+    static readonly UNDF = { name: '未审核', value: undefined }
+    static readonly TRUE = { name: '✔️已通过', value: true }
+    static readonly FALSE = { name: '❌未通过', value: false }
+}
+
+class UserTypes {
+    static readonly UNDF = { name: '未标记用户', value: undefined }
+    static readonly WHITELIST = { name: '✔️白名单', value: 'whitelist' }
+    static readonly BLACKLIST = { name: '❌黑名单', value: 'blacklist' }
 }

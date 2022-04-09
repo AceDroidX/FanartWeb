@@ -71,16 +71,98 @@
             <v-row v-if="cardsViewType.value !== CardsViewTypes.NORMAL.value">
               <v-divider />
             </v-row>
-            <v-row v-if="cardsViewType.value !== CardsViewTypes.NORMAL.value">
-              <v-col>
-                <span class="text-caption grey--text">
-                  审核状态：{{
-                    checkedStatus(card.checked)
-                  }}
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;黑/白名单：{{
-                    userInfo(card.user.id)
-                  }}</span
-                >
+            <v-row
+              v-if="cardsViewType.value !== CardsViewTypes.NORMAL.value"
+              align="center"
+              class="spacer"
+            >
+              <v-col cols="auto">
+                <span class="text-caption grey--text"> 审核状态：</span>
+              </v-col>
+              <v-col cols="auto">
+                <v-menu offset-x>
+                  <template #activator="{ on, attrs }">
+                    <v-btn
+                      outlined
+                      text
+                      class="text-caption grey--text"
+                      v-bind="attrs"
+                      v-on="on"
+                    >
+                      {{ checkedStatus(card.checked) }}
+                    </v-btn>
+                  </template>
+                  <v-list dense>
+                    <v-list-item-group
+                      :value="
+                        Object.values(CheckedTypes)
+                          .map((item) => item.name)
+                          .indexOf(checkedStatus(card.checked))
+                      "
+                      color="primary"
+                    >
+                      <v-list-item
+                        v-for="(item, index) in Object.values(CheckedTypes)"
+                        :key="index"
+                        class="text-caption grey--text"
+                        @click="
+                          updateChecked(card.id, item.value, card.checked)
+                          card.checked = item.value
+                        "
+                      >
+                        <v-list-item-title class="text-caption grey--text">{{
+                          item.name
+                        }}</v-list-item-title>
+                      </v-list-item>
+                    </v-list-item-group>
+                  </v-list>
+                </v-menu>
+              </v-col>
+              <v-spacer />
+              <v-col cols="auto">
+                <span class="text-caption grey--text"> 黑/白名单：</span>
+              </v-col>
+              <v-col cols="auto">
+                <v-menu offset-x>
+                  <template #activator="{ on, attrs }">
+                    <v-btn
+                      outlined
+                      text
+                      class="text-caption grey--text"
+                      v-bind="attrs"
+                      v-on="on"
+                    >
+                      {{ userInfo(card.user.id) }}
+                    </v-btn>
+                  </template>
+                  <v-list dense>
+                    <v-list-item-group
+                      :value="
+                        Object.values(UserTypes)
+                          .map((item) => item.name)
+                          .indexOf(userInfo(card.user.id))
+                      "
+                      color="primary"
+                    >
+                      <v-list-item
+                        v-for="(item, index) in Object.values(UserTypes)"
+                        :key="index"
+                        class="text-caption grey--text"
+                        @click="
+                          updateUserInfo(
+                            card.user.id,
+                            item.value,
+                            userInfo(card.user.id)
+                          )
+                        "
+                      >
+                        <v-list-item-title class="text-caption grey--text">{{
+                          item.name
+                        }}</v-list-item-title>
+                      </v-list-item>
+                    </v-list-item-group>
+                  </v-list>
+                </v-menu>
               </v-col>
             </v-row>
           </v-container>
@@ -119,7 +201,7 @@
 </template>
 
 <script>
-import { CardsViewTypes } from 'fanartweb-shared'
+import { CardsViewTypes, CheckedTypes, UserTypes } from 'fanartweb-shared'
 import { mapState } from 'vuex'
 export default {
   name: 'IndexPage',
@@ -129,8 +211,10 @@ export default {
       page: 0,
       isScrollDown: false,
       loadingCardText: ['加载中...', '加载中...'],
-      CardsViewTypes,
       userlist: { blacklist: [], whitelist: [] },
+      CardsViewTypes,
+      CheckedTypes,
+      UserTypes,
     }
   },
   computed: {
@@ -242,20 +326,36 @@ export default {
       }
     },
     checkedStatus(checked) {
-      if (checked === undefined) {
-        return '未审核'
+      if (checked === undefined || checked === CheckedTypes.UNDF.value) {
+        return CheckedTypes.UNDF.name
       } else if (checked) {
-        return '✔️已通过'
+        return CheckedTypes.TRUE.name
       } else {
-        return '❌未通过'
+        return CheckedTypes.FALSE.name
       }
     },
     userInfo(uid) {
       return this.userlist.blacklist?.includes(uid)
-        ? '❌黑名单'
+        ? UserTypes.BLACKLIST.name
         : this.userlist.whitelist?.includes(uid)
-        ? '✔️白名单'
-        : '未标记用户'
+        ? UserTypes.WHITELIST.name
+        : UserTypes.UNDF.name
+    },
+    updateChecked(id, val, old) {
+      console.log(id, val, old)
+    },
+    updateUserInfo(id, val, old) {
+      console.log(id, val, old)
+      if (val === UserTypes.BLACKLIST.value) {
+        this.userlist.whitelist.splice(this.userlist.whitelist.indexOf(id), 1)
+        this.userlist.blacklist.push(id)
+      } else if (val === UserTypes.WHITELIST.value) {
+        this.userlist.blacklist.splice(this.userlist.blacklist.indexOf(id), 1)
+        this.userlist.whitelist.push(id)
+      } else {
+        this.userlist.blacklist.splice(this.userlist.blacklist.indexOf(id), 1)
+        this.userlist.whitelist.splice(this.userlist.whitelist.indexOf(id), 1)
+      }
     },
   },
 }

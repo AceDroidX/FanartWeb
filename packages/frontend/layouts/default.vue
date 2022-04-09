@@ -32,7 +32,10 @@
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title v-text="title" />
       <v-spacer />
-      <v-col cols="4" sm="1">
+      <span v-if="$config.NODE_ENV !== 'production'">{{
+        $vuetify.breakpoint.name
+      }}</span>
+      <v-col cols="4" sm="3" md="2" lg="1">
         <v-select
           v-model="cardsViewType"
           hide-details

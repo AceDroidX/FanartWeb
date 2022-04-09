@@ -86,6 +86,7 @@ export default {
   build: {},
 
   publicRuntimeConfig: {
+    NODE_ENV: process.env.NODE_ENV,
     BASE_API_URL:
       process.env.NODE_ENV === 'production' ? process.env.BASE_API_URL : 'http://localhost:2162',
     VERSION: process.env.npm_package_version,
