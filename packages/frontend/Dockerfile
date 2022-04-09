@@ -15,6 +15,7 @@ RUN npm install -g pnpm@next-7 && npm cache clean --force
 COPY pnpm-lock.yaml ./
 RUN pnpm fetch --prod
 COPY . ./
+COPY --from=build /app/packages/shared/build/ ./packages/shared/build/
 COPY --from=build /app/packages/frontend/dist/ ./packages/frontend/dist/
 COPY --from=build /app/packages/frontend/.nuxt/ ./packages/frontend/.nuxt/
 RUN pnpm install --offline --prod ; exit 0

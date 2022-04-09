@@ -44,7 +44,7 @@ jobs:
       - name: Install dependencies 👨🏻‍💻
         run: pnpm fetch && pnpm install --offline ; exit 0
       - name: Generate
-        run: pnpm run -F fanartweb-frontend generate
+        run: pnpm run generate:frontend
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.7
         with:
