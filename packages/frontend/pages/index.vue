@@ -29,7 +29,9 @@
                   <strong>{{ card.user.name }}</strong>
                 </a>
                 <br />
-                <span class="grey--text text-no-wrap">{{ $getTime(card.timestamp) }}</span>
+                <span class="grey--text text-no-wrap">{{
+                  $getTime(card.timestamp)
+                }}</span>
               </v-col>
               <v-spacer />
               <v-btn
@@ -65,6 +67,21 @@
                   >七海Nana7mi赞了
                 </span></v-col
               >
+            </v-row>
+            <v-row v-if="cardsViewType.value !== CardsViewTypes.NORMAL.value">
+              <v-divider />
+            </v-row>
+            <v-row v-if="cardsViewType.value !== CardsViewTypes.NORMAL.value">
+              <v-col>
+                <span class="text-caption grey--text">
+                  审核状态：{{
+                    checkedStatus(card.checked)
+                  }}
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;黑/白名单：{{
+                    userInfo(card.user.id)
+                  }}</span
+                >
+              </v-col>
             </v-row>
           </v-container>
         </v-card>
@@ -102,20 +119,48 @@
 </template>
 
 <script>
+import { CardsViewTypes } from 'fanartweb-shared'
+import { mapState } from 'vuex'
 export default {
   name: 'IndexPage',
   data() {
     return {
       cardlist: [],
-      page: 1,
+      page: 0,
       isScrollDown: false,
       loadingCardText: ['加载中...', '加载中...'],
+      CardsViewTypes,
+      userlist: { blacklist: [], whitelist: [] },
     }
+  },
+  computed: {
+    isAdmin() {
+      return 'token' in localStorage
+    },
+    ...mapState({
+      cardsViewType: (state) => state.config.cardsViewType,
+    }),
   },
   watch: {
     async isScrollDown(val) {
       if (val) {
         await this.getThisPage()
+      }
+    },
+    async cardsViewType(val, old) {
+      const valueSameType = [
+        CardsViewTypes.NORMAL.value,
+        CardsViewTypes.DETAIL.value,
+      ]
+      if (
+        !(
+          valueSameType.includes(old.value) && valueSameType.includes(val.value)
+        )
+      ) {
+        await this.getPagesTo(this.page)
+      }
+      if (val.value !== CardsViewTypes.NORMAL.value) {
+        await this.getUserList()
       }
     },
   },
@@ -126,7 +171,14 @@ export default {
     async fetchData(page) {
       try {
         const data = await this.$axios.get(
-          this.$config.BASE_API_URL + `/fanartList?page=${page}`
+          this.$config.BASE_API_URL +
+            `/fanartList?page=${page}&type=${this.cardsViewType.value}`,
+          {
+            headers:
+              'token' in localStorage
+                ? { Authorization: `Bearer ${localStorage.token}` }
+                : {},
+          }
         )
         return data.data
       } catch (error) {
@@ -135,8 +187,9 @@ export default {
       }
     },
     async getThisPage() {
+      const i = this.page + 1
       this.loadingCardText = ['加载中...', '加载中...']
-      const data = await this.fetchData(this.page)
+      const data = await this.fetchData(i)
       if (data.message) {
         this.loadingCardText = ['加载失败', data.message]
         return
@@ -146,8 +199,63 @@ export default {
         return
       }
       this.cardlist = this.cardlist.concat(data)
-      this.page += 1
+      this.page = i
       this.isScrollDown = false
+    },
+    async getPagesTo(page) {
+      this.loadingCardText = ['加载中...', '加载中...']
+      let datalist = []
+      let i = 0
+      while (i < page) {
+        i++
+        const data = await this.fetchData(i)
+        if (data.message) {
+          this.loadingCardText = ['加载失败', data.message]
+          break
+        }
+        if (data === []) {
+          this.loadingCardText = ['加载完毕', '没有更多了']
+          break
+        }
+        datalist = datalist.concat(data)
+      }
+      this.page = i
+      this.isScrollDown = false
+      this.cardlist = datalist
+    },
+    async getUserList() {
+      try {
+        const data = await this.$axios.get(
+          this.$config.BASE_API_URL + '/userlist',
+          {
+            headers:
+              'token' in localStorage
+                ? { Authorization: `Bearer ${localStorage.token}` }
+                : {},
+          }
+        )
+        this.userlist = data.data.data
+        return data.data.data
+      } catch (error) {
+        console.error(error)
+        return error
+      }
+    },
+    checkedStatus(checked) {
+      if (checked === undefined) {
+        return '未审核'
+      } else if (checked) {
+        return '✔️已通过'
+      } else {
+        return '❌未通过'
+      }
+    },
+    userInfo(uid) {
+      return this.userlist.blacklist?.includes(uid)
+        ? '❌黑名单'
+        : this.userlist.whitelist?.includes(uid)
+        ? '✔️白名单'
+        : '未标记用户'
     },
   },
 }

@@ -1,3 +1,7 @@
+import path from 'path';
+import dotenv from 'dotenv'
+dotenv.config({ path: path.resolve(__dirname, '../.env') })
+
 import { logErrorDetail } from './utils'
 import logger from './logger';
 import { MongoClient } from 'mongodb';

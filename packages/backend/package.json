@@ -7,7 +7,7 @@
     "start": "node build/index.js",
     "test": "node build/test.js",
     "clean": "tsc --build --clean",
-    "dev": "concurrently -k \"tsc -w\" \"nodemon build/test.js\"",
+    "dev": "concurrently -k \"tsc -w\" \"nodemon\"",
     "build": "tsc",
     "serve": "tsc&&node build/index.js"
   },

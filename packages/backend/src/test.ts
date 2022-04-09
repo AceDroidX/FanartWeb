@@ -1,11 +1,8 @@
-process.env.NODE_ENV = 'development'
-process.env.BILI_COOKIE = ""
-
-import { checkCookie, getAllTag, getNewTag } from "./bili"
+import { getAllTag, getNewTag } from "./bili"
 import { MongoController } from "./MongoController"
 import fs from 'fs';
 import path from 'path';
-import { Card, IDBAppContext, IDBAppState } from "./model";
+import { Card } from "./model";
 import { main } from './index'
 
 test()

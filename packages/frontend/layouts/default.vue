@@ -32,6 +32,15 @@
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title v-text="title" />
       <v-spacer />
+      <v-col cols="4" sm="1">
+        <v-select
+          v-model="cardsViewType"
+          hide-details
+          return-object
+          :items="viewTypes"
+          item-text="name"
+        ></v-select>
+      </v-col>
       <v-btn v-if="isAdmin" to="/dashboard"> 管理员后台 </v-btn>
     </v-app-bar>
     <v-main>
@@ -43,11 +52,13 @@
 </template>
 
 <script>
+import { CardsViewTypes } from 'fanartweb-shared'
 export default {
   name: 'DefaultLayout',
   data() {
     return {
       drawer: false,
+      viewTypes: Object.values(CardsViewTypes),
       items: [
         {
           icon: 'mdi-apps',
@@ -66,6 +77,14 @@ export default {
   computed: {
     isAdmin() {
       return 'token' in localStorage
+    },
+    cardsViewType: {
+      get() {
+        return this.$store.state.config.cardsViewType
+      },
+      set(value) {
+        this.$store.commit('config/setCardsViewType', value)
+      },
     },
   },
 }

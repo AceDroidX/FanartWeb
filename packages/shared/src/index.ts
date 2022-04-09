@@ -1,6 +1,7 @@
-import { Long } from "mongodb";
+import { Document, Long, WithId } from "mongodb";
 
 export {
+    MongoDoc,
     Tag,
     Card,
     Picture,
@@ -10,12 +11,15 @@ export {
     UserInList,
     AdminUser,
     Token,
+    CardsViewTypes,
 }
 
 // interface Tag {
 //     id: number;
 //     name: string;
 // }
+
+type MongoDoc<T> = T & WithId<Document>
 
 type Tag = {
     id: number;
@@ -90,4 +94,10 @@ type Token = {
     exp: number
     username: string
     token: string
+}
+
+class CardsViewTypes {
+    static readonly NORMAL = { name: '原始视图', value: 'normal' }
+    static readonly DETAIL = { name: '详细数据', value: 'detail' }
+    static readonly ALL = { name: '全部数据', value: 'all' }
 }

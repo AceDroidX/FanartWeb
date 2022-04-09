@@ -34,6 +34,12 @@
         </v-row>
       </v-container>
     </v-card>
+    <v-card class="mx-auto" max-width="300">
+      <v-container>
+        <v-card-title> 全局设置 </v-card-title>
+        <v-card-text> Work In Progress </v-card-text>
+      </v-container>
+    </v-card>
     <v-snackbar v-model="snackbar" :timeout="timeout">
       {{ snackbarText }}
       <template v-slot:action="{ attrs }">
