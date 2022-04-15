@@ -24,3 +24,9 @@ export async function getAllUserListRaw(this: MongoController) {
     const result = await Promise.all([this.getUserListRaw('blacklist'), this.getUserListRaw('whitelist')])
     return { blacklist: result[0], whitelist: result[1] }
 }
+export async function setUserInfo(this: MongoController, user: UserInList, type: string | undefined) {
+    await Promise.all([await this.deleteUserList('blacklist', user.id), await this.deleteUserList('whitelist', user.id)])
+    if (type == 'blacklist' || type == 'whitelist') {
+        await this.addUserList(type, user)
+    }
+}

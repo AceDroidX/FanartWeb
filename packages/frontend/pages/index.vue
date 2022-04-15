@@ -150,7 +150,7 @@
                         class="text-caption grey--text"
                         @click="
                           updateUserInfo(
-                            card.user.id,
+                            card.user,
                             item.value,
                             userInfo(card.user.id)
                           )
@@ -364,17 +364,33 @@ export default {
         return error
       }
     },
-    updateUserInfo(id, val, old) {
-      console.log(id, val, old)
+    async updateUserInfo(user, val, old) {
+      console.log(user, val, old)
+      try {
+        const data = await this.$axios.put(
+          this.$config.BASE_API_URL + `/user${val ? '?type=' + val : ''}`,
+          user,
+          {
+            headers:
+              'token' in localStorage
+                ? { Authorization: `Bearer ${localStorage.token}` }
+                : {},
+          }
+        )
+        console.log(data.data)
+      } catch (error) {
+        console.error(error)
+        return error
+      }
       if (val === UserTypes.BLACKLIST.value) {
-        this.userlist.whitelist.splice(this.userlist.whitelist.indexOf(id), 1)
-        this.userlist.blacklist.push(id)
+        this.userlist.whitelist.splice(this.userlist.whitelist.indexOf(user.id), 1)
+        this.userlist.blacklist.push(user.id)
       } else if (val === UserTypes.WHITELIST.value) {
-        this.userlist.blacklist.splice(this.userlist.blacklist.indexOf(id), 1)
-        this.userlist.whitelist.push(id)
+        this.userlist.blacklist.splice(this.userlist.blacklist.indexOf(user.id), 1)
+        this.userlist.whitelist.push(user.id)
       } else {
-        this.userlist.blacklist.splice(this.userlist.blacklist.indexOf(id), 1)
-        this.userlist.whitelist.splice(this.userlist.whitelist.indexOf(id), 1)
+        this.userlist.blacklist.splice(this.userlist.blacklist.indexOf(user.id), 1)
+        this.userlist.whitelist.splice(this.userlist.whitelist.indexOf(user.id), 1)
       }
     },
   },

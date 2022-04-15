@@ -3,7 +3,7 @@ import { Long, MongoClient } from "mongodb"
 import logger from "../logger"
 import { Card, MongoDBs } from "../model"
 import { createHash } from 'crypto'
-import { getUserListRaw, getUserList, addUserList, deleteUserList, updateUserList, getAllUserList, getAllUserListRaw } from "./userlist"
+import { getUserListRaw, getUserList, addUserList, deleteUserList, updateUserList, getAllUserList, getAllUserListRaw, setUserInfo } from "./userlist"
 
 export {
     MongoController
@@ -128,6 +128,7 @@ class MongoController {
     updateUserList = updateUserList
     getAllUserList = getAllUserList
     getAllUserListRaw = getAllUserListRaw
+    setUserInfo = setUserInfo
     async insertToken(token: Token) {
         await this.dbs.token.insertOne(token)
     }
