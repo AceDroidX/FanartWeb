@@ -2,7 +2,7 @@ import { AsyncTask, SimpleIntervalJob, Task, ToadScheduler } from "toad-schedule
 import { checkCookie, getAllTag, getNewTag } from "./bili"
 import logger from "./logger"
 import { Card } from "./model"
-import { MongoController } from "./MongoController"
+import { MongoController } from "./mongo/MongoController"
 import { logErrorDetail } from "./utils"
 
 export class BiliController {

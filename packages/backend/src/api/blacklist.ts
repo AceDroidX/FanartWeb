@@ -23,18 +23,18 @@ router.get('/blacklist', async (ctx, next) => {
     ctx.response.body = {
         code: 0,
         msg: 'ok',
-        data: await ctx.mongo.getBlackListRaw()
+        data: await ctx.mongo.getUserListRaw('blacklist')
     }
     await next()
 })
 
 router.post('/blacklist', async (ctx, next) => {
-    await ctx.mongo.addBlackList(ctx.request.body as UserInList)
+    await ctx.mongo.addUserList('blacklist', ctx.request.body as UserInList)
     ctx.response.status = 200
     ctx.response.body = {
         code: 0,
         msg: '添加成功',
-        data: await ctx.mongo.getBlackListRaw()
+        data: await ctx.mongo.getUserListRaw('blacklist')
     }
     await next()
 })
@@ -49,23 +49,23 @@ router.delete('/blacklist', async (ctx, next) => {
         }
         return
     }
-    await ctx.mongo.deleteBlackList(Number(ctx.request.query.id))
+    await ctx.mongo.deleteUserList('blacklist', Number(ctx.request.query.id))
     ctx.response.status = 200
     ctx.response.body = {
         code: 0,
         msg: '删除成功',
-        data: await ctx.mongo.getBlackListRaw()
+        data: await ctx.mongo.getUserListRaw('blacklist')
     }
     await next()
 })
 
 router.put('/blacklist', async (ctx, next) => {
-    await ctx.mongo.updateBlackList(ctx.request.body as UserInList)
+    await ctx.mongo.updateUserList('blacklist', ctx.request.body as UserInList)
     ctx.response.status = 200
     ctx.response.body = {
         code: 0,
         msg: '更新成功',
-        data: await ctx.mongo.getBlackListRaw()
+        data: await ctx.mongo.getUserListRaw('blacklist')
     }
     await next()
 })

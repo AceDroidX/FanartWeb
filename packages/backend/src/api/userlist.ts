@@ -22,7 +22,7 @@ router.get('/userlist', async (ctx, next) => {
     ctx.response.body = {
         code: 1,
         msg: 'ok',
-        data: await ctx.mongo.getUserList()
+        data: await ctx.mongo.getAllUserList()
     }
     await next()
 });

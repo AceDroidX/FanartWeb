@@ -5,7 +5,7 @@ dotenv.config({ path: path.resolve(__dirname, '../.env') })
 import { logErrorDetail } from './utils'
 import logger from './logger';
 import { MongoClient } from 'mongodb';
-import { MongoController } from './MongoController';
+import { MongoController } from './mongo/MongoController';
 import winston from 'winston';
 import { initApi } from './api';
 import { BiliController } from './BiliController';

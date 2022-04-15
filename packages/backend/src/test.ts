@@ -1,5 +1,5 @@
 import { getAllTag, getNewTag } from "./bili"
-import { MongoController } from "./MongoController"
+import { MongoController } from "./mongo/MongoController"
 import fs from 'fs';
 import path from 'path';
 import { Card } from "./model";

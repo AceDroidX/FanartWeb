@@ -1,5 +1,5 @@
 import { Collection, Decimal128, Long } from "mongodb";
-import { MongoController } from "../MongoController";
+import { MongoController } from "../mongo/MongoController";
 import { Card as CardBase, Emoji, Picture, User } from 'fanartweb-shared';
 import logger from "../logger";
 

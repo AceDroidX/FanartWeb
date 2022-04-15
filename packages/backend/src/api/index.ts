@@ -4,7 +4,7 @@ import bodyParser from 'koa-bodyparser';
 import Router from 'koa-router';
 import logger from '../logger';
 import { IDBAppState, IDBAppContext } from '../model';
-import { MongoController } from '../MongoController';
+import { MongoController } from '../mongo/MongoController';
 
 import fanartRoutes from './fanart';
 import fanartListRoutes from './fanartList';

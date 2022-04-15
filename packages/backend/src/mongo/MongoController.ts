@@ -1,9 +1,9 @@
-import { AdminUser, GlobalConfig, MongoDoc, Token, UserInList } from "fanartweb-shared"
-import { Int32, Long, MongoClient } from "mongodb"
-import logger from "./logger"
-// import { onMblogEvent } from "./weibo.ts"
-import { Card, MongoDBs } from "./model"
+import { AdminUser, GlobalConfig, MongoDoc, Token } from "fanartweb-shared"
+import { Long, MongoClient } from "mongodb"
+import logger from "../logger"
+import { Card, MongoDBs } from "../model"
 import { createHash } from 'crypto'
+import { getUserListRaw, getUserList, addUserList, deleteUserList, updateUserList, getAllUserList, getAllUserListRaw } from "./userlist"
 
 export {
     MongoController
@@ -57,26 +57,25 @@ class MongoController {
                 ? `mongodb://admin:${process.env.MONGODB_PASS}@${process.env.MONGODB_IP}:27017/?authMechanism=DEFAULT`
                 : 'mongodb://admin:admin@localhost:27017/'
         )
-        let dbs
         try {
             await client.connect()
-            dbs = {
+            const dbs: MongoDBs = {
                 cardlist: client.db('fanart').collection('cardlist'),
                 config: client.db('fanart').collection('config'),
                 blacklist: client.db('fanart').collection('blacklist'),
                 whitelist: client.db('fanart').collection('whitelist'),
                 admin: client.db('fanart').collection('admin'),
                 token: client.db('fanart').collection('token'),
-            } as MongoDBs
+            }
             dbs.cardlist.createIndex({ id: -1 }, { unique: true })
             dbs.cardlist.createIndex({ timestamp: -1 })
+            logger.info('数据库已连接')
+            return new MongoController(client, dbs)
         } catch (err) {
             console.log('ERR when connect to AMDB')
             console.log(err)
             process.exit(1)
         }
-        logger.info('数据库已连接')
-        return new MongoController(client, dbs)
     }
     async close() {
         await this.client.close()
@@ -90,7 +89,7 @@ class MongoController {
         logger.info('cardlist更新完毕')
     }
     async getCards(pages: number) {
-        const result = await Promise.all([this.getBlackList(), this.getGlobalConfig()])
+        const result = await Promise.all([this.getUserList('blacklist'), this.getGlobalConfig()])
         return await this.dbs.cardlist.aggregate(getCardsPipeline(result[0], true, result[1].new_card_time, (pages - 1) * 20, 20)).toArray()
     }
     async getAllCards(pages: number) {
@@ -122,35 +121,13 @@ class MongoController {
     async setGlobalConfig(value: GlobalConfig) {
         await this.dbs.config.updateOne({ type: 'global' }, { $set: value }, { upsert: true })
     }
-    async getBlackListRaw() {
-        return await this.dbs.blacklist.find().toArray()
-    }
-    async getBlackList() {
-        return (await this.getBlackListRaw()).map(user => user.id)
-    }
-    async addBlackList(user: UserInList) {
-        await this.dbs.blacklist.insertOne(user)
-    }
-    async deleteBlackList(id: number) {
-        await this.dbs.blacklist.deleteOne({ id })
-    }
-    async updateBlackList(user: UserInList) {
-        await this.dbs.blacklist.updateOne({ id: user.id }, { $set: user })
-    }
-    async getWhiteListRaw() {
-        return await this.dbs.whitelist.find().toArray()
-    }
-    async getWhiteList() {
-        return (await this.getWhiteListRaw()).map(user => user.id)
-    }
-    async getUserList() {
-        const result = await Promise.all([this.getBlackList(), this.getWhiteList()])
-        return { blacklist: result[0], whitelist: result[1] }
-    }
-    async getUserListRaw() {
-        const result = await Promise.all([this.getBlackListRaw(), this.getWhiteListRaw()])
-        return { blacklist: result[0], whitelist: result[1] }
-    }
+    getUserListRaw = getUserListRaw
+    getUserList = getUserList
+    addUserList = addUserList
+    deleteUserList = deleteUserList
+    updateUserList = updateUserList
+    getAllUserList = getAllUserList
+    getAllUserListRaw = getAllUserListRaw
     async insertToken(token: Token) {
         await this.dbs.token.insertOne(token)
     }
