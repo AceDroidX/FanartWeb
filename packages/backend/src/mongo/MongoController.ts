@@ -9,13 +9,18 @@ export {
     MongoController
 }
 
-const getCardsPipeline = (blacklist: number[], checked: boolean | undefined, newCardTime: number, skipNum: number, limitNum: number) => [{
+const getCardsPipeline = (blacklist: number[], whitelist: number[], checked: boolean | undefined, newCardTime: number, skipNum: number, limitNum: number) => [{
     $sort: {
         timestamp: -1
     }
 }, {
     $match: {
         $or: [
+            {
+                'user.id': {
+                    $in: whitelist
+                },
+            },
             {
                 'user.id': {
                     $nin: blacklist
@@ -89,11 +94,11 @@ class MongoController {
         logger.info('cardlist更新完毕')
     }
     async getCards(pages: number) {
-        const result = await Promise.all([this.getUserList('blacklist'), this.getGlobalConfig()])
-        return await this.dbs.cardlist.aggregate(getCardsPipeline(result[0], true, result[1].new_card_time, (pages - 1) * 20, 20)).toArray()
+        const result = await Promise.all([this.getUserList('blacklist'), this.getUserList('whitelist'), this.getGlobalConfig()])
+        return await this.dbs.cardlist.aggregate(getCardsPipeline(result[0], result[1], true, result[2].new_card_time, (pages - 1) * 20, 20)).toArray()
     }
     async getAllCards(pages: number) {
-        return await this.dbs.cardlist.aggregate(getCardsPipeline([], undefined, (await this.getGlobalConfig()).new_card_time, (pages - 1) * 20, 20)).toArray()
+        return await this.dbs.cardlist.aggregate(getCardsPipeline([], [], undefined, (await this.getGlobalConfig()).new_card_time, (pages - 1) * 20, 20)).toArray()
     }
     async isCardsExist() {
         return await this.client.db('fanart').listCollections({ name: 'cardlist' }).hasNext() && await this.dbs.cardlist.countDocuments() > 0
