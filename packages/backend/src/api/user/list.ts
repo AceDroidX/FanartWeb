@@ -20,9 +20,19 @@ router.all('/alllist', async (ctx, next) => {
 router.get('/alllist', async (ctx, next) => {
     ctx.response.status = 200
     ctx.response.body = {
-        code: 1,
+        code: 0,
         msg: 'ok',
         data: await ctx.mongo.getAllUserList()
+    }
+    await next()
+});
+
+router.get('/listraw', async (ctx, next) => {
+    ctx.response.status = 200
+    ctx.response.body = {
+        code: 0,
+        msg: 'ok',
+        data: await ctx.mongo.getAllUserListRaw()
     }
     await next()
 });

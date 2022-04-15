@@ -31,7 +31,7 @@ router.put("/user", async (ctx, next) => {
     const user: UserInList = ctx.request.body
     ctx.response.status = 200
     ctx.response.body = {
-        code: 1,
+        code: 0,
         msg: 'ok',
         data: await ctx.mongo.setUserInfo(user, ctx.request.query.type)
     }
