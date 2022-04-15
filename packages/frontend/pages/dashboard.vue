@@ -76,7 +76,7 @@ export default {
       try {
         this.loading = true
         const data = await this.$axios.get(
-          this.$config.BASE_API_URL + `/blacklist?token=${localStorage.token}`
+          this.$config.BASE_API_URL + `/user/blacklist?token=${localStorage.token}`
         )
         if (data.data.code !== 0) {
           return
@@ -103,7 +103,7 @@ export default {
       try {
         this.loading = true
         const data = await this.$axios.post(
-          this.$config.BASE_API_URL + `/blacklist?token=${localStorage.token}`,
+          this.$config.BASE_API_URL + `/user/blacklist?token=${localStorage.token}`,
           {
             id: parseInt(this.uid),
             name: this.username,
@@ -125,7 +125,7 @@ export default {
         this.loading = true
         const data = await this.$axios.delete(
           this.$config.BASE_API_URL +
-            `/blacklist?token=${localStorage.token}&id=${uid}`
+            `/user/blacklist?token=${localStorage.token}&id=${uid}`
         )
         if (data.data.code !== 0) {
           return

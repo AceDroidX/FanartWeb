@@ -8,9 +8,8 @@ import { MongoController } from '../mongo/MongoController';
 
 import fanartRoutes from './fanart';
 import fanartListRoutes from './fanartList';
+import adminuserRoutes from './adminuser';
 import userRoutes from './user';
-import userlistRoutes from './userlist';
-import blacklistRoutes from './blacklist';
 import configRoutes from './config';
 
 const router = new Router<IDBAppState, IDBAppContext>()
@@ -23,9 +22,8 @@ router.get('/test', async (ctx, next) => {
 
 router.use(fanartRoutes.routes());
 router.use(fanartListRoutes.routes());
+router.use(adminuserRoutes.routes());
 router.use(userRoutes.routes());
-router.use(userlistRoutes.routes());
-router.use(blacklistRoutes.routes())
 router.use(configRoutes.routes())
 
 export async function initApi(mongo: MongoController) {

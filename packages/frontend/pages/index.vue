@@ -310,7 +310,7 @@ export default {
     async getUserList() {
       try {
         const data = await this.$axios.get(
-          this.$config.BASE_API_URL + '/userlist',
+          this.$config.BASE_API_URL + '/user/alllist',
           {
             headers:
               'token' in localStorage

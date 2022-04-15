@@ -7,7 +7,7 @@ import { IDBAppState, IDBAppContext } from "../model"
 const router = new Router<IDBAppState, IDBAppContext>()
 export default router
 
-router.post('/user/login', async (ctx, next) => {
+router.post('/adminuser/login', async (ctx, next) => {
     if (await ctx.mongo.verifyAdminUser(ctx.request.body.username, ctx.request.body.password)) {
         const token = randomBytes(32).toString('hex')
         ctx.mongo.insertToken({
@@ -36,7 +36,7 @@ router.post('/user/login', async (ctx, next) => {
     await next()
 })
 
-router.post('/user/register', async (ctx, next) => {
+router.post('/adminuser/register', async (ctx, next) => {
     const username = ctx.request.body.username
     const password = ctx.request.body.password
     let salt = ctx.request.body.salt
