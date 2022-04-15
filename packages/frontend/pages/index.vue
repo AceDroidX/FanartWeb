@@ -341,8 +341,28 @@ export default {
         ? UserTypes.WHITELIST.name
         : UserTypes.UNDF.name
     },
-    updateChecked(id, val, old) {
+    async updateChecked(id, val, old) {
       console.log(id, val, old)
+      try {
+        const data = await this.$axios.put(
+          this.$config.BASE_API_URL + `/fanart/checked`,
+          {
+            id,
+            checked: val,
+          },
+          {
+            headers:
+              'token' in localStorage
+                ? { Authorization: `Bearer ${localStorage.token}` }
+                : {},
+          }
+        )
+        console.log(data.data.data)
+        return data.data
+      } catch (error) {
+        console.error(error)
+        return error
+      }
     },
     updateUserInfo(id, val, old) {
       console.log(id, val, old)

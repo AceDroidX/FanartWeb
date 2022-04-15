@@ -1,5 +1,5 @@
 import { AdminUser, GlobalConfig, MongoDoc, Token, UserInList } from "fanartweb-shared"
-import { Int32, MongoClient } from "mongodb"
+import { Int32, Long, MongoClient } from "mongodb"
 import logger from "./logger"
 // import { onMblogEvent } from "./weibo.ts"
 import { Card, MongoDBs } from "./model"
@@ -9,7 +9,7 @@ export {
     MongoController
 }
 
-const getCardsPipeline = (blacklist: number[], ckecked: boolean | undefined, newCardTime: number, skipNum: number, limitNum: number) => [{
+const getCardsPipeline = (blacklist: number[], checked: boolean | undefined, newCardTime: number, skipNum: number, limitNum: number) => [{
     $sort: {
         timestamp: -1
     }
@@ -20,7 +20,7 @@ const getCardsPipeline = (blacklist: number[], ckecked: boolean | undefined, new
                 'user.id': {
                     $nin: blacklist
                 },
-                'ckecked': ckecked !== undefined ? ckecked : { $in: [true, false, undefined] },
+                'checked': checked !== undefined ? checked : { $in: [true, false, undefined] },
                 'timestamp': { $gte: newCardTime }
             },
             {
@@ -99,6 +99,9 @@ class MongoController {
     async isCardsExist() {
         return await this.client.db('fanart').listCollections({ name: 'cardlist' }).hasNext() && await this.dbs.cardlist.countDocuments() > 0
     }
+    async setCardChecked(id: Long, checked: boolean | undefined) {
+        await this.dbs.cardlist.updateOne({ id }, { $set: { checked } })
+    }
     async verifyAdminUser(username: string, password: string) {
         const admin_user = (await this.dbs.admin.findOne({ username })) as MongoDoc<AdminUser>
         if (!admin_user) return false
@@ -117,7 +120,7 @@ class MongoController {
         return config ? config : await this.initGlobalConfig()
     }
     async setGlobalConfig(value: GlobalConfig) {
-        await this.dbs.config.updateOne({ type: 'global' }, value, { upsert: true })
+        await this.dbs.config.updateOne({ type: 'global' }, { $set: value }, { upsert: true })
     }
     async getBlackListRaw() {
         return await this.dbs.blacklist.find().toArray()

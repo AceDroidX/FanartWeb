@@ -60,7 +60,7 @@ class Card {
     timestamp: number;
     text: string;
     isliked: boolean;
-    ckecked?: boolean;
+    checked?: boolean;
     user: User;
     emoji: Emoji[];
     pictures: Picture[];

@@ -37,7 +37,9 @@
     <v-card class="mx-auto" max-width="300">
       <v-container>
         <v-card-title> 全局设置 </v-card-title>
-        <v-card-text> Work In Progress </v-card-text>
+        <v-card-text> 新动态的开始时间戳: </v-card-text>
+        <v-text-field v-model="new_card_time"></v-text-field>
+        <v-btn @click="setGlobalConfig()">确定</v-btn>
       </v-container>
     </v-card>
     <v-snackbar v-model="snackbar" :timeout="timeout">
@@ -59,6 +61,7 @@ export default {
       blacklist: [],
       uid: undefined,
       username: undefined,
+      new_card_time: '',
       snackbar: false,
       timeout: 5000,
       snackbarText: '',
@@ -66,7 +69,7 @@ export default {
   },
   watch: {},
   async mounted() {
-    await this.getBlacklist()
+    await Promise.all([this.getBlacklist(), this.getGlobalConfig()])
   },
   methods: {
     async getBlacklist() {
@@ -131,6 +134,46 @@ export default {
         this.blacklist = data.data.data
       } catch (error) {
         console.error(error.response?.data?.msg)
+        console.error(error)
+        return error
+      }
+    },
+    async getGlobalConfig() {
+      try {
+        const data = await this.$axios.get(
+          this.$config.BASE_API_URL + `/config/global`,
+          {
+            headers:
+              'token' in localStorage
+                ? { Authorization: `Bearer ${localStorage.token}` }
+                : {},
+          }
+        )
+        console.log(data.data.data)
+        this.new_card_time = data.data.data.new_card_time
+        return data.data
+      } catch (error) {
+        console.error(error)
+        return error
+      }
+    },
+    async setGlobalConfig() {
+      try {
+        const data = await this.$axios.put(
+          this.$config.BASE_API_URL + `/config/global`,
+          {
+            new_card_time: this.new_card_time,
+          },
+          {
+            headers:
+              'token' in localStorage
+                ? { Authorization: `Bearer ${localStorage.token}` }
+                : {},
+          }
+        )
+        console.log(data.data.data)
+        return data.data
+      } catch (error) {
         console.error(error)
         return error
       }
