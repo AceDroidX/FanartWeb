@@ -27,7 +27,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v2.0.1
         with:
-          version: 7.0.0-rc.2
+          version: 7.0.0-rc.4
       - name: Setup node env 🏗
         uses: actions/setup-node@v2.1.5
         with:

@@ -1,7 +1,7 @@
 FROM node:16-alpine AS build
 WORKDIR /app
 ENV TZ=Asia/Shanghai
-RUN npm install -g pnpm@next-7 && npm cache clean --force
+RUN npm install -g pnpm@7.0.0-rc.4 && npm cache clean --force
 COPY pnpm-lock.yaml ./
 RUN pnpm fetch
 COPY . ./
@@ -11,7 +11,7 @@ RUN pnpm install --offline ; \
 FROM node:16-alpine
 WORKDIR /app
 ENV TZ=Asia/Shanghai
-RUN npm install -g pnpm@next-7 && npm cache clean --force
+RUN npm install -g pnpm@7.0.0-rc.4 && npm cache clean --force
 COPY pnpm-lock.yaml ./
 RUN pnpm fetch --prod
 COPY . ./
