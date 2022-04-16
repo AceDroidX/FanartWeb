@@ -1,9 +1,11 @@
+import { MongoDoc } from "fanartweb-shared"
 import { AsyncTask, SimpleIntervalJob, Task, ToadScheduler } from "toad-scheduler"
 import { checkCookie, getAllTag, getNewTag } from "./bili"
+import { sendMsg } from "./khl"
 import logger from "./logger"
 import { Card } from "./model"
 import { MongoController } from "./mongo/MongoController"
-import { logErrorDetail } from "./utils"
+import { getTime, logErrorDetail } from "./utils"
 
 export class BiliController {
     tag = { id: 12454097, name: '鲨画' }
@@ -24,7 +26,7 @@ export class BiliController {
         }
         if (!await this.mongo.isCardsExist()) {
             logger.info('数据为空，开始获取全部卡片')
-            await this.insertCards(await this.getAllTag())
+            await this.insertCards(await this.getAllTag(), false)
         }
         logger.info('启动卡片获取定时任务')
         await this.intervaljob()
@@ -38,7 +40,7 @@ export class BiliController {
         if (!await checkCookie()) {
             throw new Error('bilibili cookie过期')
         }
-        this.insertCards(await getNewTag(this.tag))
+        this.insertCards(await getNewTag(this.tag), true)
     }
     async getAllTag() {
         const cards = await getAllTag(this.tag)
@@ -47,7 +49,20 @@ export class BiliController {
         }
         return cards
     }
-    async insertCards(cards: Card[]) {
-        await this.mongo.insertCards(cards)
+    async insertCards(cards: Card[], isNewCards: boolean) {
+        const result = await this.mongo.insertCards(cards)
+        if (isNewCards) {
+            logger.info(`添加${result.length}条新数据`)
+            for (const item of result) {
+                const data = await this.mongo.getCardByObjectId(item)
+                if (data == null) {
+                    logger.error(`未找到${item}动态`)
+                } else {
+                    const card = data as MongoDoc<Card>
+                    const urls = card.pictures.join('\n')
+                    await sendMsg(`[${getTime()}]新增鲨画：<${card.user.name}>\n${card.text}\n${urls}`)
+                }
+            }
+        }
     }
 }

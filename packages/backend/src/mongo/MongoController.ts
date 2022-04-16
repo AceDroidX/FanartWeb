@@ -1,5 +1,5 @@
 import { AdminUser, GlobalConfig, MongoDoc, Token } from "fanartweb-shared"
-import { Long, MongoClient } from "mongodb"
+import { Long, MongoClient, ObjectId } from "mongodb"
 import logger from "../logger"
 import { Card, MongoDBs } from "../model"
 import { createHash } from 'crypto'
@@ -87,11 +87,15 @@ class MongoController {
     }
     async insertCards(cards: Card[]) {
         logger.info(`cardlist更新${cards.length}条数据`)
-        await Promise.all(cards.map(card => this.dbs.cardlist.updateOne({ id: card.id }, {
+        const result = await Promise.all(cards.map(card => this.dbs.cardlist.updateOne({ id: card.id }, {
             $set: card,
             // $setOnInsert: { _id: card.id }
         }, { upsert: true })))
         logger.info('cardlist更新完毕')
+        return result.filter(r => r.upsertedCount > 0).map(r => r.upsertedId)
+    }
+    async getCardByObjectId(_id: ObjectId) {
+        return await this.dbs.cardlist.findOne({ _id })
     }
     async getCards(pages: number) {
         const result = await Promise.all([this.getUserList('blacklist'), this.getUserList('whitelist'), this.getGlobalConfig()])

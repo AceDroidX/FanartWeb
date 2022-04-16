@@ -30,6 +30,8 @@ services:
             - MONGODB_PASS=fanartweb
             - MONGODB_IP=fanartweb-mongo
             - BILI_COOKIE=
+            - khl_msg_channel_id=
+            - KHL_TOKEN=
     fanartweb-frontend:
         image: acedroidx/fanartweb-frontend
         restart: unless-stopped

@@ -31,6 +31,8 @@ services:
             - MONGODB_PASS=fanartweb
             - MONGODB_IP=fanartweb-mongo
             - BILI_COOKIE=
+            - khl_msg_channel_id=
+            - KHL_TOKEN=
 volumes:
     mongodata:
 
